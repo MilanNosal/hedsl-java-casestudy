@@ -17,7 +17,7 @@ import entities.language.metamodel.Type;
  * This we consider a starting point of our experiment.
  * @author Milan
  */
-public abstract class EL {
+public abstract class StaticEntityBuilder {
     /**
      * Model that is built by this expression builder.
      */
@@ -28,7 +28,8 @@ public abstract class EL {
      */
     private static List<Entity> entities = new LinkedList<Entity>();
     
-    // mediating also the enumeration constants
+    // mediating also the enumeration constants, this way instead of 
+    // 'Type.STRING' the language user can write just 'string'
     public static Type string = Type.STRING;
     public static Type integer = Type.INTEGER;
     public static Type real = Type.REAL;
@@ -45,8 +46,8 @@ public abstract class EL {
 
     /**
      * Creation function for an entity.
-     * @param name
-     * @param properties 
+     * @param name name of the property
+     * @param properties and a list of its properties
      */
     public static void entity(String name, Property... properties) {
         entities.add(new Entity(name, properties));
@@ -54,15 +55,19 @@ public abstract class EL {
 
     /**
      * Property creation method.
-     * @param name
-     * @param type
-     * @param constraints
-     * @return 
+     * @param name name of the property
+     * @param type its type
+     * @param constraints and a list of its constraints
+     * @return new property
      */
     public static Property property(String name, Type type, Constraint... constraints) {
         return new Property(name, type, constraints);
     }
 
+    /**
+     * The required constraints creation function.
+     * @return new required constraint
+     */
     public static Required required() {
         return new Required();
     }
