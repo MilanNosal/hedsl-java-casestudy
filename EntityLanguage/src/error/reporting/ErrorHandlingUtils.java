@@ -1,10 +1,10 @@
-package entities.language.builder;
+package error.reporting;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Simple error linker.
+ * Utility class for reporting errors with linking to source code.
  *
  * @author Milan
  */
@@ -22,6 +22,11 @@ public class ErrorHandlingUtils {
      */
     private final Map<Object, StackTraceElement> debugInfo = new HashMap<Object, StackTraceElement>();
 
+    /**
+     * An instance of this class has to be created with the class of the expression
+     * builder class with creation methods.
+     * @param expressionBuilderClass 
+     */
     public ErrorHandlingUtils(Class expressionBuilderClass) {
         this.expressionBuilderClass = expressionBuilderClass;
     }

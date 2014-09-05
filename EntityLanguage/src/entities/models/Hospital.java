@@ -9,14 +9,19 @@ public class Hospital extends EntityBuilder {
     protected void define() {
         // EDSLAddon_end_fold
     entity("Patient",
-        property("name", string, required(), length(5, 30)),
-        property("age", integer, range(0, 120))
+            property("name", string, required(), length(5, 30)),
+            property("age", integer, range(0, 120))
+    );
+    entity("Doctor", 
+            property("name", string, required(), length(5, 30)),
+            property("age", integer, required(), range(25, 65)),
+            property("specialty", string, length(2, 50))
     );
     // uncomment an entity with duplicated name for error reporting test
-        entity("Patient", 
-                property("name", string),
-                property("insurance", string)
-        );
+//    entity("Patient", 
+//            property("name", string),
+//            property("insurance", string)
+//    );
 // EDSLAddon_start_fold desc="Definition ends here."
 
     }

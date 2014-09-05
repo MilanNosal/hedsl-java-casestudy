@@ -1,5 +1,6 @@
 package entities.language.builder;
 
+import error.reporting.ErrorHandlingUtils;
 import entities.language.metamodel.constraints.Regex;
 import entities.language.metamodel.constraints.Length;
 import entities.language.metamodel.constraints.Required;
