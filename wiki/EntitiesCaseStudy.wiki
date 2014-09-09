@@ -11,9 +11,9 @@ Checking out the SVN repository of this project will provide You with a NetBeans
 
 ==Goal==
 
-The goal of the case study is to implement a homogeneous embedded DSL (hEDSL) for CRUD applications, and to use the EDSLAddon along with hEDSL language manipulations to make the language more usable for *non-programming* domain experts. The main role in this experiment will play NetBeans IDE.
+The goal of the case study is to implement a homogeneous embedded DSL (hEDSL) for CRUD applications, and to use the _EDSLAddon_ plugin along with hEDSL language manipulations to make the language more usable for *non-programming* domain experts. The main role in this experiment will play the NetBeans IDE.
 
-The language should support writing down entities with their properties, and with constraints laid upon properties. The semantics of the language will not be implemented here, suffice to say that in the final version the language would be able to generate a skeleton of a CRUD application working with defined entities.
+The Entities language should support writing down entities with their properties, and with constraints laid upon properties. The semantics of the language will not be implemented here, suffice to say that in the final version the language would be able to generate a skeleton of a CRUD application working with defined entities.
 
 An example of the language sentence defining a simple Hospital:
 
@@ -60,7 +60,7 @@ public class HospitalStatic {
 }
 }}}
 
-The main part that can be expected to be of the domain expert's interest is the body of the compose method. The rest is just Java syntactic noise required to compile and to mediate the model to the rest of the infrastructure. The model creation is teste in `entities.Main`.
+The main part that can be expected to be of the domain expert's interest is the body of the compose method. The rest is just Java syntactic noise required to compile and to mediate the model to the rest of the infrastructure. The model creation is tested in the `entities.Main` class.
 
 ==Using _EDSLAddon_ DSL template for sentence skeleton==
 
@@ -83,7 +83,7 @@ Definition ends here.
 
 The first and last line are collapsed folds hiding the necessary skeleton of the Entities hEDSL sentence. This skeleton is Java syntactic noise and thus we hide it from user. To prevent the inexpert manipulation the folds are also guarded.
 
-For *non-programmer* domain experts only the middle part is important. uarding and hiding of the rest is not a problem. Non-programmers will most probably not be able to modify the skeleton without messing it. For a programmer this might seem a restriction, but he will be skilled enough to overcome it by opening it in other editor. For a non-programmer this skeleton is a law. If an error rises, *they* messed up (in the `compose` method body). They should not use any other parts of Java except the Entities hEDSL.
+For *non-programmer* domain experts only the middle part is important. Guarding and hiding of the rest is not a problem. Non-programmers will most probably not be able to modify the skeleton without messing it. For a programmer this might seem a restriction, but he will be skilled enough to overcome it by opening it in other editor. For a non-programmer this skeleton is a law. If an error rises, *they* messed up (in the `compose` method body). They should not use any other parts of Java except the Entities hEDSL.
 
 ==Smart code completion support==
 
@@ -139,18 +139,16 @@ To leverage the NetBeans Output window we needed only to manipulate the hEDSL im
 
 {{{
 protected Regex regex(String regex) {
-  Regex regexp = new Regex(regex);
-  return errorHandling.registerObject(regexp);
+    Regex regexp = new Regex(regex);
+    return errorHandling.registerObject(regexp);
 }
 }}}
 
 The `EntityBuilder` class can now use the error utility object to report errors. For example, if the language does not allow duplicate entity names, the validation might iterate through all the entities in the in-memory model, store their names and compare them to each other. The error reporting would look like the following code snippet:
 
 {{{
-if(usedEntitiesNames.contains(
-                    currentEntity.getName())) {
-  errorHandling.reportError(currentEntity, 
-    new ParsingException("Duplicate entity!"));
+if(usedEntitiesNames.contains(currentEntity.getName())) {
+    errorHandling.reportError(currentEntity, new ParsingException("Duplicate entity!"));
 }
 }}}
 
