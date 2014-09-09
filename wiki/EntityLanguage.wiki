@@ -1,4 +1,6 @@
+#summary EntityLanguage NetBeans Project
 #labels Featured
+
 = Case study project =
 
 EntityLanguage is the NetBeans IDE Java project of the case study.
