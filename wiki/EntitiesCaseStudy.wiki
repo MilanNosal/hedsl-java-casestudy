@@ -1,5 +1,5 @@
+#summary The Entities hEDSL case study
 #labels Featured
-# summary The Entities hEDSL case study
 
 =Entities language case study=
 
