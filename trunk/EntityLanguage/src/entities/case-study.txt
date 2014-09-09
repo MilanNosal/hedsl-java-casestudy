@@ -1,3 +1,5 @@
+#summary The Entities hEDSL case study
+
 =Entities language case study=
 
 ==Setup==
@@ -8,9 +10,9 @@ Checking out the SVN repository of this project will provide You with a NetBeans
 
 ==Goal==
 
-The goal of the case study is to implement homogeneous embedded DSL (hEDSL) for CRUD applications, and to use the EDSLAddon along with hEDSL language manipulations to make the language more usable for *non-programming* domain experts. The main role in this experiment will play NetBeans IDE.
+The goal of the case study is to implement a homogeneous embedded DSL (hEDSL) for CRUD applications, and to use the _EDSLAddon_ plugin along with hEDSL language manipulations to make the language more usable for *non-programming* domain experts. The main role in this experiment will play the NetBeans IDE.
 
-The language should support writing down entities with their properties, and with constraints laid upon properties. The semantics of the language will not be implemented here, suffice to say that in the final version the language would be able to generate a skeleton of a CRUD application working with defined entities.
+The Entities language should support writing down entities with their properties, and with constraints laid upon properties. The semantics of the language will not be implemented here, suffice to say that in the final version the language would be able to generate a skeleton of a CRUD application working with defined entities.
 
 An example of the language sentence defining a simple Hospital:
 
@@ -32,21 +34,22 @@ The first version of the expression builder we implemented with nested functions
 
 The expression builder is the `entities.language.builder.StaticEntityBuilder`. This class mediates the creation of the language semantic model through its static methods (functions) thus simplifying its creation. A simple hEDSL sentence written with this expression builder is `entities.models.HospitalStatic`.
 
-`entities.models.HospitalStatic` (without comments):
+`entities.models.HospitalStatic` (without static import):
 
 {{{
 package entities.models;
 
 import entities.language.builder.StaticEntityBuilder;
-import static entities.language.builder.StaticEntityBuilder.*;
 import entities.language.metamodel.Model;
 
 public class HospitalStatic {
     
     public void compose() {
-        entity("Patient",
-                property("name", string, required(), length(5, 30)),
-                property("age", integer, range(0, 120))
+        StaticEntityBuilder.entity("Patient",
+                StaticEntityBuilder.property("name", 
+                        StaticEntityBuilder.string, StaticEntityBuilder.required(), StaticEntityBuilder.length(5, 30)),
+                StaticEntityBuilder.property("age", 
+                        StaticEntityBuilder.integer, StaticEntityBuilder.range(0, 120))
         );
     }
     
@@ -56,7 +59,7 @@ public class HospitalStatic {
 }
 }}}
 
-The main part that can be expected to be of the domain expert's interest is the body of the compose method. The rest is just Java syntactic noise required to compile and to mediate the model to the rest of the infrastructure. The model creation is teste in `entities.Main`.
+The main part that can be expected to be of the domain expert's interest is the body of the compose method. The rest is just Java syntactic noise required to compile and to mediate the model to the rest of the infrastructure. The model creation is tested in the `entities.Main` class.
 
 ==Using _EDSLAddon_ DSL template for sentence skeleton==
 
@@ -79,15 +82,19 @@ Definition ends here.
 
 The first and last line are collapsed folds hiding the necessary skeleton of the Entities hEDSL sentence. This skeleton is Java syntactic noise and thus we hide it from user. To prevent the inexpert manipulation the folds are also guarded.
 
-For *non-programmer* domain experts only the middle part is important. uarding and hiding of the rest is not a problem. Non-programmers will most probably not be able to modify the skeleton without messing it. For a programmer this might seem a restriction, but he will be skilled enough to overcome it by opening it in other editor. For a non-programmer this skeleton is a law. If an error rises, *they* messed up (in the `compose` method body). They should not use any other parts of Java except the Entities hEDSL.
+For *non-programmer* domain experts only the middle part is important. Guarding and hiding of the rest is not a problem. Non-programmers will most probably not be able to modify the skeleton without messing it. For a programmer this might seem a restriction, but he will be skilled enough to overcome it by opening it in other editor. For a non-programmer this skeleton is a law. If an error rises, *they* messed up (in the `compose` method body). They should not use any other parts of Java except the Entities hEDSL.
 
 ==Smart code completion support==
 
 If You check the new Entities expression builder, the `entities.language.builder.EntityBuilder` class, You will notice that it uses the object scoping technique ( http://martinfowler.com/dslCatalog/objectScoping.html ). Instead of static methods it uses instance methods, and the expression builder class is an abstract class, with the abstract `compose()` method. A sentence in the Entities hEDSL is now a class extending the `EntityBuilder` class.
 
-Although it deals with global functions and global state, the other reason why we have used it is a Smart Code Completion of the NetBeans IDE. This is a language manipulation, since this will work even without the _EDSLAddon_ installed (the plain NetBeans IDE will suffice).
+This implementation was chosen for multiple reasons. It solves the problem with global functions and global state. It is also a more natural approach for object-oriented programmer.
 
-If You go back to the `entities.models.HospitalStatic` Hospital definition with static methods, You can try to use code completion (Ctrl + Space). You will see
+Last but not the least, is the Smart Code Completion of the NetBeans IDE. Since the hEDSL sentence class extends the `EntityBuilder` class, its methods are inherited in the scope of the sentence. Smart code completion can offer them to the user without additional imports. In the middle of a method call, the type inference of code completion will detect the type of required argument and it will offer a method call with appropriate return type.
+
+You can try to use code completion (Ctrl + Space) during the writing, e.g., when You have typed `entity("Student", ` with the cursor at the end, code completion will offer you call to the `property()` method that returns a property.
+
+The same effect on the Smart code completion could be achieved with the static import, You can experiment with it in the `entities.models.HospitalStatic` class. There is a static import commented out. After uncommenting it, You will also not require to write `StaticEntityBuilder.` prefix to all the method calls. In the end we chose the object scoping pattern for the reason mentioned above.
 
 ==Error reporting with navigation==
 
@@ -121,7 +128,31 @@ Defined duplicate entity with name Teacher
 	 at entities.models.School.define(School.java:15)
 }}}
 
-The user is told not only what is the problem, but is also navigated by the `at entities.models.School.define(School.java:15)` line. It tells him that the problem is at `School` class on the line 15. The nice part is that the string `School.java:15` is clickable and clicking on it will open the file in the editor and put the cursor at that line.
+The user is told not only what is the problem, but is also navigated by the `at entities.models.School.define(School.java:15)` line. It tells him that the problem is at `School` class on the line 15. The nice part is that the string `School.java:15` is clickable and clicking on it (You are encouraged to try) will open the file in the editor and put the cursor at that line.
+
+==Error reporting implementation==
+
+NetBeans' output window prints exceptions stack trace in a way so that the NetBeans user can click all the method calls listings to get navigated to the source code with calls. It helps a programmer to quickly navigate to the source of the exception. However, if a program prints a message in a certain format to the standard error output stream the NetBeans Output window will make it a clickable link that will navigate the user the the given location. The details of the format are not important for our discussion, enough to mention that `StackTraceElement`'s `toString()` method returns a string with location of the method call represented by the given `StackTraceElement` object. The list of the `StackTraceElement` objects is always associated with an `Exception` object.
+
+To leverage the NetBeans Output window we needed only to manipulate the hEDSL implementation. We have implemented a simple generic `ErrorHandlingUtils` utility class that have two main public methods. The first one is `<T> T registerObject(T object)` that is used to register a model object creation. It creates an exception, traverses its stack trace and finds a method call that belongs to the hEDSL expression builder class. Corresponding `StackTraceElement` object is put into a hashtable where the model object is a key. Now each nested method used to create a model object calls `registerObject()` method right after the creation. Following is a creation method for regular expression constraint in our `EntityBuilder`.
+
+{{{
+protected Regex regex(String regex) {
+    Regex regexp = new Regex(regex);
+    return errorHandling.registerObject(regexp);
+}
+}}}
+
+The `EntityBuilder` class can now use the error utility object to report errors. For example, if the language does not allow duplicate entity names, the validation might iterate through all the entities in the in-memory model, store their names and compare them to each other. The error reporting would look like the following code snippet:
+
+{{{
+if(usedEntitiesNames.contains(currentEntity.getName())) {
+    errorHandling.reportError(currentEntity, new ParsingException("Duplicate entity!"));
+}
+}}}
+
+The `reportError()` method takes two arguments, the object that cause the validation error and an exception that should be thrown. The method will use the hashtable to find the associated `StackTraceElement` and will print it to error stream to create a navigational link to the code line where the creation method of this model object was called. Clicking that link will open in the editor the appropriate source file and put the cursor on the given line.
 
 ==Conclusion==
 
+The case study shows that an IDE can play an important role in involving non-programming domain experts in the hEDSL usage. All the presented techniques were easy to implement and easy to use, thus they do not significantly increase the language implementation costs.
