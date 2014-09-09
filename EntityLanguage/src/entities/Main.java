@@ -1,6 +1,5 @@
 package entities;
 
-
 import entities.language.builder.ParsingException;
 import entities.models.Hospital;
 import entities.models.HospitalStatic;
