@@ -5,7 +5,6 @@ import entities.language.metamodel.Type;
 /**
  * The required constraint. A property with this constraint has to be 
  * inserted.
- * @author Milan
  */
 public class Required extends Constraint {
     public Required() {

@@ -4,7 +4,6 @@ import entities.language.metamodel.Type;
 
 /**
  * Constraints that can be set upon the properties.
- * @author Milan
  */
 public abstract class Constraint {
     /**

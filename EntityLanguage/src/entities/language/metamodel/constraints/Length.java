@@ -4,7 +4,6 @@ import entities.language.metamodel.Type;
 
 /**
  * Sets a constraint upon length of a string.
- * @author Milan
  */
 public class Length extends Constraint {
     public static final int DEFAULT_LENGTH = 32;

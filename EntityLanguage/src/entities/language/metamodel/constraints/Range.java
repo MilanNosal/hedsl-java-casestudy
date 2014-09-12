@@ -4,7 +4,6 @@ import entities.language.metamodel.Type;
 
 /**
  * Range constraint for numbers.
- * @author Milan
  */
 public class Range extends Constraint {
     /**

@@ -16,7 +16,7 @@ import entities.language.metamodel.Type;
  * Entities language expression builder working with static nested functions.
  * This we consider a starting point of our experiment.
  */
-public abstract class StaticEntityBuilder {
+public abstract class EL {
     /**
      * Model that is built by this expression builder.
      */
@@ -27,8 +27,7 @@ public abstract class StaticEntityBuilder {
      */
     private static List<Entity> entities = new LinkedList<Entity>();
     
-    // mediating also the enumeration constants, this way instead of 
-    // 'Type.STRING' the language user can write just 'string'
+    // mediating also the enumeration constants
     public static Type string = Type.STRING;
     public static Type integer = Type.INTEGER;
     public static Type real = Type.REAL;
@@ -45,8 +44,8 @@ public abstract class StaticEntityBuilder {
 
     /**
      * Creation function for an entity.
-     * @param name name of the property
-     * @param properties and a list of its properties
+     * @param name
+     * @param properties 
      */
     public static void entity(String name, Property... properties) {
         entities.add(new Entity(name, properties));
@@ -54,19 +53,15 @@ public abstract class StaticEntityBuilder {
 
     /**
      * Property creation method.
-     * @param name name of the property
-     * @param type its type
-     * @param constraints and a list of its constraints
-     * @return new property
+     * @param name
+     * @param type
+     * @param constraints
+     * @return 
      */
     public static Property property(String name, Type type, Constraint... constraints) {
         return new Property(name, type, constraints);
     }
 
-    /**
-     * The required constraints creation function.
-     * @return new required constraint
-     */
     public static Required required() {
         return new Required();
     }
