@@ -7,7 +7,6 @@ import entities.language.metamodel.Model;
 
 /**
  * Hospital defined using static nested functions without the static import.
- * @author Milan
  */
 public class HospitalStatic {
     

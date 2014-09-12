@@ -5,7 +5,6 @@ import entities.language.metamodel.constraints.Constraint;
 
 /**
  * A class representing a property of an entity.
- * @author Milan
  */
 public class Property implements Named {
     /**

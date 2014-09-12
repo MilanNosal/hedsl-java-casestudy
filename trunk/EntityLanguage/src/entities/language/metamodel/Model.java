@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 /**
  * The model of the CRUD application.
- * @author Milan
  */
 public class Model {
     /**

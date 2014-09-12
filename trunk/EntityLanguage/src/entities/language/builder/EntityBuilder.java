@@ -16,7 +16,6 @@ import entities.language.metamodel.Type;
 /**
  * Entity builder using object scoping to aid code completion and 
  * ErrorHandlingUtils class for advanced error reporting.
- * @author Milan
  */
 public abstract class EntityBuilder {
 

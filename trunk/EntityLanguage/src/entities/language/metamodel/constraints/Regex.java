@@ -4,7 +4,6 @@ import entities.language.metamodel.Type;
 
 /**
  * Regular expression constraint.
- * @author Milan
  */
 public class Regex extends Constraint {
     /**

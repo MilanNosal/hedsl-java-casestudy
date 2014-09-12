@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 /**
  * Represents an entity.
- * @author Milan
  */
 public class Entity implements Named {
     /**
